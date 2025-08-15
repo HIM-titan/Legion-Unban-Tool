@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legion Unban Tool - Premium Edition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+        
+        :root {
+            --dark-bg: #0a0a1a;
+            --darker-bg: #070714;
+            --accent-color: #dc143c;
+            --accent-gradient: linear-gradient(135deg, #dc143c, #a80f2d);
+            --accent-secondary: #7a5af5;
+            --card-bg: rgba(25, 25, 55, 0.5);
+            --input-bg: rgba(30, 30, 60, 0.3);
+            --subtle-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            --button-shadow: 0 4px 15px rgba(220, 20, 60, 0.4);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            --glow: 0 0 15px rgba(220, 20, 60, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            color: #e0e0ff;
+            min-height: 100vh;
+            padding: 20px;
+            background: var(--darker-bg);
+            overflow-x: hidden;
+            position: relative;
+            background-image: radial-gradient(circle at 20% 30%, rgba(220, 20, 60, 0.1) 0%, transparent 40%), 
+                              radial-gradient(circle at 80% 70%, rgba(122, 90, 245, 0.1) 0%, transparent 40%);
+        }
+
+        .container {
+            background: var(--card-bg);
+            border: 1px solid rgba(220, 20, 60, 0.2);
+            border-radius: 20px;
+            padding: 35px 30px;
+            max-width: 750px;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(12px);
+            box-shadow: var(--subtle-shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            margin: 20px auto;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(220, 20, 60, 0.1) 0%, rgba(10, 10, 26, 0) 70%);
+            z-index: -1;
+        }
+
+        /* --- Notification Styles --- */
+        #success-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            z-index: 1000;
+            padding: 18px 40px;
+            border-radius: 15px;
+            font-weight: 600;
+            display: none;
+            color: white;
+            opacity: 0;
+            background: linear-gradient(90deg, #37a85d, #208741);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.5s ease-out, opacity 0.5s ease-out, background 1s ease-in-out;
+            font-size: 16px;
+        }
+
+        #success-notification.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* --- Unlock Page Styles --- */
+        #unlock-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #unlock-page h2 {
+            font-size: 1.2em;
+            margin-bottom: 25px;
+            color: #ff9faf;
+            font-weight: 400;
+        }
+
+        #unlock-input {
+            width: 100%;
+            max-width: 320px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 16px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            background: var(--input-bg);
+            color: #f0f0ff;
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        #unlock-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.2);
+        }
+
+        #unlock-status {
+            color: #ff6b6b;
+            margin: 15px 0;
+            font-size: 0.95em;
+            min-height: 24px;
+        }
+
+        .contact-buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 25px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .contact-buttons-container h3 {
+            font-size: 1.1em;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #ffb8c8;
+        }
+
+        .contact-button {
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 500;
+            border: none;
+            border-radius: 14px;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .telegram-button {
+            background: linear-gradient(135deg, #0088cc, #006699);
+        }
+
+        .whatsapp-button-unlock {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+        }
+
+        h1 {
+            font-size: 2.7em;
+            margin-bottom: 20px;
+            text-shadow: var(--glow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            background: linear-gradient(to right, #ff9faf, #dc143c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h1 .heading-icon {
+            font-size: 1.4em;
+            margin-bottom: 5px;
+        }
+        
+        h2 {
+            color: #ffc8d8;
+            font-size: 1.3em;
+            margin-top: 10px;
+            margin-bottom: 18px;
+            font-weight: 500;
+        }
+
+        #dynamic-info {
+            font-size: 0.95em;
+            color: #d9a4b8;
+            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #dynamic-info p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .tab {
+            padding: 12px 30px;
+            background: rgba(220, 20, 60, 0.2);
+            border: none;
+            border-radius: 10px 10px 0 0;
+            color: #ffb8c8;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab.active {
+            background: rgba(220, 20, 60, 0.4);
+            color: white;
+            box-shadow: var(--glow);
+        }
+
+        .tab:not(.active):hover {
+            background: rgba(220, 20, 60, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 700px) {
+            .form-grid-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .container {
+                padding: 25px 20px;
+            }
+            
+            h1 {
+                font-size: 2.2em;
+            }
+        }
+        
+        select, input, textarea {
+            width: 100%;
+            padding: 16px 18px;
+            margin: 8px 0 15px;
+            border-radius: 14px;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+            background: var(--input-bg);
+            color: #f0f0ff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            box-shadow: var(--subtle-shadow);
+            transition: var(--transition);
+            resize: vertical;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        select {
+            background-image: linear-gradient(45deg, transparent 50%, var(--accent-color) 50%), 
+                              linear-gradient(135deg, var(--accent-color) 50%, transparent 50%);
+            background-position: calc(100% - 20px) 50%, calc(100% - 15px) 50%;
+            background-size: 5px 5px, 5px 5px;
+            background-repeat: no-repeat;
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 200, 220, 0.5);
+        }
+
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.2);
+        }
+        
+        button {
+            width: 100%;
+            padding: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            transition: var(--transition);
+            box-shadow: var(--button-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(30deg);
+            transition: var(--transition);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(220, 20, 60, 0.5);
+        }
+        
+        button:hover::after {
+            transform: rotate(30deg) translate(20%, 20%);
+        }
+        
+        .tip {
+            font-size: 0.92em;
+            color: #d9a4b8;
+            margin: 10px 0 5px;
+            font-style: italic;
+        }
+
+        .footer {
+            margin-top: 25px;
+            font-size: 14px;
+            color: #888;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .contact-dev-button {
+            margin-top: 15px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 28px;
+            font-size: 15px;
+            border: 1px solid var(--accent-color);
+            color: var(--accent-color);
+            background: rgba(220, 20, 60, 0.1);
+            border-radius: 14px;
+            text-decoration: none;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            font-weight: 500;
+        }
+
+        .contact-dev-button:hover {
+            transform: translateY(-3px);
+            background: rgba(220, 20, 60, 0.2);
+            box-shadow: 0 8px 25px rgba(220, 20, 60, 0.3);
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            display: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #fff;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Floating animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        /* Glowing effect */
+        .glow {
+            text-shadow: var(--glow);
+        }
+
+        .feature-card {
+            background: rgba(220, 20, 60, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            text-align: center;
+            border: 1px solid rgba(220, 20, 60, 0.3);
+        }
+
+        .feature-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: rgba(220, 20, 60, 0.15);
+            border-radius: 15px;
+            padding: 15px;
+            min-width: 120px;
+            margin: 10px;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--accent-color);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #ffb8c8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <i class="fab fa-whatsapp heading-icon floating"></i>
+            <span class="glow">LEGION UNBAN TOOL</span>
+        </h1>
+        
+        <div id="dynamic-info">
+            <p id="localTime"><i class="far fa-clock"></i> Loading time...</p>
+            <p id="batteryStatus"><i class="fas fa-battery-half"></i> Loading battery status...</p>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat">
+                <div class="stat-value">99%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">24h</div>
+                <div class="stat-label">Avg. Response</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">1K+</div>
+                <div class="stat-label">Accounts Unbanned</div>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <h3><i class="fas fa-crown"></i> Premium Features</h3>
+            <p>Advanced appeal templates • Group unban support • Priority processing • Multi-account recovery</p>
+        </div>
+
+        <div class="tab-container">
+            <button class="tab active" data-tab="account">ACCOUNT UNBAN</button>
+            <button class="tab" data-tab="group">GROUP UNBAN</button>
+        </div>
+
+        <!-- Account Unban Tab -->
+        <div id="account-tab" class="tab-content active">
+            <div class="form-grid-container">
+                <div class="form-left">
+                    <h2>SELECT WHATSAPP TYPE</h2>
+                    <select id="whatsappType">
+                        <option value="regular">REGULAR WHATSAPP</option>
+                        <option value="business">WHATSAPP BUSINESS</option>
+                        <option value="accessibility">WHATSAPP ACCESSIBILITY</option>
+                    </select>
+
+                    <h2>SELECT PHONE TYPE</h2>
+                    <select id="phoneType">
+                        <option value="android">ANDROID</option>
+                        <option value="iphone">IPHONE</option>
+                    </select>
+                    
+                    <h2>SELECT UNBAN OPTION</h2>
+                    <select id="banType">
+                        <option value="normal">NORMAL UNBANNED</option>
+                        <option value="permanent">PERMANENTLY UNBANNED</option>
+                    </select>
+                </div>
+                
+                <div class="form-right">
+                    <h2>ENTER NUMBER</h2>
+                    <input type="text" id="number" placeholder="eg: +923xxxxxxxx">
+
+                    <h2>SELECT APPEAL TEMPLATE</h2>
+                    <select id="prompt">
+                        <option value="1">TEMPLATE 1: Comprehensive Appeal</option>
+                        <option value="2">TEMPLATE 2: Professional Request</option>
+                        <option value="3">TEMPLATE 3: Detailed Explanation</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <p class="tip">✨ For best results, use the email linked to your WhatsApp account</p>
+                <button onclick="sendAccountUnbanRequest()">
+                    <i class="fas fa-paper-plane"></i> SEND ACCOUNT UNBAN REQUEST
+                    <div class="spinner" id="account-spinner"></div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Group Unban Tab -->
+        <div id="group-tab" class="tab-content">
+            <div class="form-grid-container">
+                <div class="form-left">
+                    <h2>GROUP TYPE</h2>
+                    <select id="groupType">
+                        <option value="personal">Personal Group</option>
+                        <option value="business">Business Group</option>
+                        <option value="community">Community Group</option>
+                    </select>
+
+                    <h2>GROUP SIZE</h2>
+                    <select id="groupSize">
+                        <option value="small">Small (1-50 members)</option>
+                        <option value="medium">Medium (51-200 members)</option>
+                        <option value="large">Large (201+ members)</option>
+                    </select>
+                    
+                    <h2>YOUR ROLE</h2>
+                    <select id="groupRole">
+                        <option value="admin">Group Admin</option>
+                        <option value="member">Group Member</option>
+                        <option value="creator">Group Creator</option>
+                    </select>
+                </div>
+                
+                <div class="form-right">
+                    <h2>GROUP INVITE LINK</h2>
+                    <input type="text" id="groupLink" placeholder="https://chat.whatsapp.com/...">
+
+                    <h2>SELECT APPEAL TEMPLATE</h2>
+                    <select id="groupPrompt">
+                        <option value="1">TEMPLATE 1: Formal Group Appeal</option>
+                        <option value="2">TEMPLATE 2: Community Restoration</option>
+                        <option value="3">TEMPLATE 3: Detailed Group Appeal</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <p class="tip">🔗 Always include the group invite link for verification</p>
+                <button onclick="sendGroupUnbanRequest()">
+                    <i class="fas fa-users"></i> SEND GROUP UNBAN REQUEST
+                    <div class="spinner" id="group-spinner"></div>
+                </button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><i class="fas fa-copyright"></i> LEGION | 2025</p>
+            <p>Advanced Unban Solutions</p>
+        </div>
+
+        <a href="http://wa.me/2348089946272" class="contact-dev-button" target="_blank">
+            <i class="fas fa-headset"></i> Premium Support
+        </a>
+    </div>
+    
+    <div id="success-notification">
+        <i class="fas fa-check-circle"></i> Unban request sent successfully!
+    </div>
+
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Hide all tab contents
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Show the corresponding tab content
+                const tabName = this.getAttribute('data-tab');
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+            });
+        });
+
+        // --- CODES & MONETIZATION ---
+        let validUnlockCodes = [
+            'LEGION-IS_HIM',
+        ];
+        
+        // --- CORE LOGIC ---
+        function displayLocalTime() {
+            const options = {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+                timeZoneName: 'short'
+            };
+            const timeString = new Date().toLocaleTimeString(undefined, options);
+            document.getElementById('localTime').innerHTML = `<i class="far fa-clock"></i> Current time: ${timeString}`;
+        }
+        setInterval(displayLocalTime, 1000);
+
+        function displayBatteryStatus() {
+            if ('getBattery' in navigator) {
+                navigator.getBattery().then(function(battery) {
+                    function updateBatteryStatus() {
+                        const level = battery.level;
+                        const percentage = Math.floor(level * 100);
+                        const chargingStatus = battery.charging ? ' <i class="fas fa-bolt"></i> (Charging)' : '';
+                        document.getElementById('batteryStatus').innerHTML = `<i class="fas fa-battery-${getBatteryIcon(level)}"></i> Battery: ${percentage}%${chargingStatus}`;
+                    }
+
+                    function getBatteryIcon(level) {
+                        if (level >= 0.9) return 'full';
+                        if (level >= 0.6) return 'three-quarters';
+                        if (level >= 0.4) return 'half';
+                        if (level >= 0.1) return 'quarter';
+                        return 'empty';
+                    }
+
+                    updateBatteryStatus();
+                    battery.addEventListener('levelchange', updateBatteryStatus);
+                    battery.addEventListener('chargingchange', updateBatteryStatus);
+                });
+            } else {
+                document.getElementById('batteryStatus').innerHTML = '<i class="fas fa-battery-slash"></i> Battery status not supported.';
+            }
+        }
+
+        function showSuccessNotification(message) {
+            const notification = document.getElementById('success-notification');
+            notification.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            notification.style.display = 'flex';
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 500);
+            }, 5000);
+        }
+
+        // Enhanced appeal messages (each over 120 words)
+        const accountAppeals = {
+            normal: {
+                1: `Dear WhatsApp Support Team,
+
+I am writing to respectfully request a review of the ban placed on my WhatsApp account associated with the number NUMBER_HERE. I believe this action may have been taken in error as I have always adhered to WhatsApp's Terms of Service and Community Guidelines. 
+
+My account is crucial for both personal communication and professional activities. I maintain regular contact with family members abroad and coordinate with colleagues through this platform. The sudden restriction has caused significant disruption to these essential communications.
+
+I assure you that I have not engaged in any prohibited activities such as spamming, broadcasting misinformation, or using unauthorized third-party applications. My usage patterns have been consistent with those of a regular user who values the platform for genuine connection.
+
+I kindly request you to investigate this matter thoroughly and consider reinstating my account. I am willing to provide any additional information required to verify my identity and usage patterns. Your assistance in this matter would be greatly appreciated and would help restore my ability to stay connected with important contacts.
+
+Thank you for your time and consideration. I look forward to a positive resolution.
+
+Sincerely,
+A Valued WhatsApp User`,
+                2: `To WhatsApp Support,
+
+I am reaching out regarding my banned account (NUMBER_HERE) which I believe was restricted without sufficient justification. As a long-term user since 2018, I have always respected platform rules and used WhatsApp responsibly.
+
+The ban has created substantial difficulties as this is my primary communication channel for both personal and professional matters. I rely on WhatsApp for coordinating with healthcare providers regarding my elderly parents' medical needs and for managing my small business communications.
+
+I have never used automated messaging systems, engaged in bulk messaging, or participated in groups that violate community standards. My account activity has always been within normal parameters for a legitimate user.
+
+I would be grateful if you could reexamine this decision and restore my account access. I am committed to continuing to use WhatsApp in compliance with all policies and would appreciate your understanding of the hardship this ban has caused.
+
+Please let me know if any further verification is needed from my end to facilitate this process.
+
+Respectfully,
+A Dedicated User`,
+                3: `Dear WhatsApp Team,
+
+I am writing to appeal the ban on my account (NUMBER_HERE). This restriction has come as a complete surprise as I have always been a conscientious user who strictly follows all platform guidelines.
+
+WhatsApp serves as my primary means of communication with international family members, including video calls with grandchildren overseas. Additionally, I use it for coordinating volunteer work with a local community organization. The ban has severed these important connections and hampered our charitable efforts.
+
+I confirm that I have not violated any terms of service. My account security is maintained with two-factor authentication, and I regularly update the application to the latest version. I do not use any modified versions of WhatsApp or unauthorized third-party applications.
+
+I kindly request you to review this case and restore my account access. I would be happy to provide additional documentation or verification to support my appeal. Your prompt attention to this matter would help me reconnect with important aspects of my personal and community life.
+
+Thank you for your understanding and assistance.
+
+Best regards,
+A Responsible User`
+            },
+            permanent: {
+                1: `Dear WhatsApp Support,
+
+I am writing to appeal the permanent ban on my account (NUMBER_HERE) and request reconsideration of this severe action. I understand that violations may have occurred, but I assure you they were unintentional and not representative of my typical usage patterns.
+
+This account is vital to my daily life. It contains years of important communications, family memories, and business contacts that cannot be replaced. The permanent restriction has caused significant personal and professional disruption.
+
+Upon reflection, I realize that certain behaviors might have been misinterpreted as violations. I may have forwarded messages more frequently than intended during a family emergency, which could have triggered automated systems. I sincerely apologize for any unintended policy breaches and assure you of my commitment to compliance moving forward.
+
+I respectfully request a final opportunity to continue using WhatsApp. I will carefully review all terms of service and implement measures to ensure strict adherence. Your mercy in this matter would mean restoring essential connections that I deeply value.
+
+Thank you for considering my appeal. I am hopeful for a second chance to demonstrate responsible usage of your platform.
+
+Sincerely,
+A User Seeking Redemption`,
+                2: `To the WhatsApp Review Team,
+
+I am submitting this appeal regarding the permanent ban on my account (NUMBER_HERE). While I understand that policies must be enforced, I believe the penalty in my case is disproportionate and warrants reconsideration.
+
+This account has been active for over five years and contains irreplaceable communications related to my child's medical history, family memories, and business documentation. The permanent loss of this data represents a significant personal hardship.
+
+Upon investigation, I suspect the ban may have resulted from being added to groups that violated terms without my active participation. I recognize that I should have been more vigilant about group memberships and immediately left any questionable groups.
+
+I accept responsibility for any violations and have taken steps to educate myself on all community guidelines. I promise strict compliance going forward and would appreciate the opportunity to demonstrate this commitment.
+
+Please consider reinstating my account with a final warning. I am willing to accept any temporary restrictions as part of the reinstatement process.
+
+Thank you for your time and consideration of my circumstances.
+
+Respectfully,
+A User Seeking Resolution`,
+                3: `Dear WhatsApp Support,
+
+I am appealing the permanent ban on my account (NUMBER_HERE) and requesting a final opportunity to continue using your service. I acknowledge that certain actions may have violated policies but assure you they were not malicious in intent.
+
+This account is essential for maintaining contact with elderly relatives who are not tech-savvy and can only communicate through WhatsApp. The ban has isolated them during a difficult time when family connection is most needed.
+
+The violations, if any occurred, likely stemmed from my attempts to coordinate a community fundraiser which involved messaging multiple contacts about event details. In my enthusiasm, I may have exceeded forwarding limits without realizing it constituted a policy violation.
+
+I have thoroughly reviewed WhatsApp's Terms of Service and implemented new practices to ensure strict compliance. I would be grateful for the chance to prove myself as a responsible user and restore these vital connections.
+
+Please consider my appeal and the extenuating circumstances. I am open to any probationary measures you might implement as part of reinstatement.
+
+Thank you for your understanding.
+
+Sincerely,
+A User in Need of Restoration`
+            }
+        };
+
+        const groupAppeals = {
+            1: `Dear WhatsApp Support,
+
+I am writing to formally request the reinstatement of our WhatsApp group that was recently banned. The group with invite link GROUP_LINK_HERE was an important community space for [explain purpose - e.g., local neighborhood coordination, professional networking, hobby enthusiasts].
+
+Our group consistently adhered to WhatsApp's Community Guidelines and Terms of Service. We maintained active moderation, promptly removed inappropriate content, and ensured all members respected platform rules. The ban appears to be an automated action that didn't consider our group's actual content and positive purpose.
+
+This group served [number] members who relied on it for [explain importance - e.g., critical community updates, professional development, support network]. Its removal has disrupted important communications and fragmented our community.
+
+We believe the ban may have resulted from false reports or an automated system error. We have thoroughly reviewed our group's content history and confirmed there were no violations of WhatsApp's policies. All conversations remained respectful and within established guidelines.
+
+We kindly request you to investigate this matter and restore our group. We are willing to implement any additional moderation measures you recommend to prevent future issues. Our community members are eager to regain this valuable space for constructive interaction.
+
+Thank you for your time and consideration. We look forward to a favorable resolution.
+
+Sincerely,
+The Group Administrators`,
+            2: `To WhatsApp Support Team,
+
+We are appealing the ban on our WhatsApp group (GROUP_LINK_HERE). This group has been a vital platform for [explain purpose - e.g., coordinating volunteer efforts, educational discussions, professional collaboration] since [start date].
+
+Our moderation team worked diligently to maintain a safe environment that complied with all WhatsApp policies. We implemented strict rules against spam, misinformation, and inappropriate content. All administrators received training on community guidelines enforcement.
+
+The sudden ban has caused significant disruption to [explain impact - e.g., our charitable activities, educational programs, business operations]. With [number] active members affected, we're facing challenges in maintaining important community services and connections.
+
+We suspect this action may have been triggered by either:
+1. A coordinated false reporting campaign
+2. Automated systems misinterpreting legitimate group activity
+3. Unintentional violations by since-removed members
+
+We've conducted a thorough audit of group content and confirmed compliance. We're prepared to enhance our moderation practices with your guidance.
+
+Please restore our group and provide any specific feedback to help us maintain compliance. We value WhatsApp as a platform and want to continue using it responsibly for our community's benefit.
+
+Respectfully,
+The Group Leadership Team`,
+            3: `Dear WhatsApp Trust and Safety Team,
+
+We are submitting a formal appeal regarding the ban of our WhatsApp group (GROUP_LINK_HERE). This group served as the primary communication channel for [explain community - e.g., a registered non-profit organization, a professional association, a community support group] with [number] dedicated members.
+
+Our group maintained strict adherence to WhatsApp's policies through:
+- Daily moderation by [number] trained administrators
+- Clear community guidelines visible to all members
+- Immediate removal of rule-violating content
+- Regular audits of group activity
+
+The ban has severely impacted our ability to [explain critical functions - e.g., deliver essential services, coordinate emergency responses, maintain professional networks]. We've lost access to important resources and historical information stored in the group.
+
+We believe this action resulted from either:
+- Automated systems flagging normal activity patterns as suspicious
+- Misinterpretation of context in group discussions
+- Actions by former members before their removal
+
+We've since strengthened our moderation protocols and would welcome your guidance on further improvements. Our community is committed to maintaining a positive, policy-compliant space on your platform.
+
+We respectfully request group restoration and the opportunity to address any specific concerns you may have. Please consider the valuable social function our group serves when reviewing this appeal.
+
+Thank you for your time and attention to this important matter.
+
+Sincerely,
+The Group Administration Committee`
+        };
+
+        const emailMap = {
+            'regular': {
+                'android': 'support@support.whatsapp.com',
+                'iphone': 'iphone-support@support.whatsapp.com'
+            },
+            'business': {
+                'android': 'smb_web@support.whatsapp.com',
+                'iphone': 'smb_web@support.whatsapp.com'
+            },
+            'accessibility': {
+                 'android': 'Accessibility@support.whatsapp.com',
+                 'iphone': 'Accessibility@support.whatsapp.com'
+            }
+        };
+
+        function sendAccountUnbanRequest() {
+            const number = document.getElementById('number').value.trim();
+            const promptId = document.getElementById('prompt').value;
+            const banType = document.getElementById('banType').value;
+            const whatsappType = document.getElementById('whatsappType').value;
+            const phoneType = document.getElementById('phoneType').value;
+            const spinner = document.getElementById('account-spinner');
+
+            if (!number.startsWith('+') || number.length < 7) {
+                alert('Please enter a valid number like +234xx.');
+                return;
+            }
+
+            // Show loading spinner
+            spinner.style.display = 'inline-block';
+            
+            // Get the appeal text
+            let message = accountAppeals[banType][promptId];
+            message = message.replaceAll('NUMBER_HERE', number);
+            
+            const recipientEmail = emailMap[whatsappType][phoneType];
+            const subject = encodeURIComponent('Account Unban Appeal - Legion Tool');
+            const mailto = `mailto:${recipientEmail}?subject=${subject}&body=${encodeURIComponent(message)}`;
+            
+            // Simulate processing delay
+            setTimeout(() => {
+                spinner.style.display = 'none';
+                showSuccessNotification('Account unban request sent successfully!');
+                window.location.href = mailto;
+            }, 1500);
+        }
+
+        function sendGroupUnbanRequest() {
+            const groupLink = document.getElementById('groupLink').value.trim();
+            const promptId = document.getElementById('groupPrompt').value;
+            const groupType = document.getElementById('groupType').value;
+            const groupSize = document.getElementById('groupSize').value;
+            const groupRole = document.getElementById('groupRole').value;
+            const spinner = document.getElementById('group-spinner');
+
+            if (!groupLink.includes('chat.whatsapp.com')) {
+                alert('Please enter a valid WhatsApp group invite link.');
+                return;
+            }
+
+            // Show loading spinner
+            spinner.style.display = 'inline-block';
+            
+            // Get the appeal text
+            let message = groupAppeals[promptId];
+            message = message.replace('GROUP_LINK_HERE', groupLink);
+            
+            // Additional replacements based on form selections
+            message = message.replace('[explain purpose]', getGroupPurpose(groupType));
+            message = message.replace('[explain importance]', getGroupImportance(groupSize, groupRole));
+            message = message.replace('[number]', getGroupSizeNumber(groupSize));
+            message = message.replace('[explain community]', getCommunityDescription(groupType));
+            message = message.replace('[explain critical functions]', getCriticalFunctions(groupType));
+            
+            const recipientEmail = 'support@support.whatsapp.com'; // General support for groups
+            const subject = encodeURIComponent('Group Unban Appeal - Legion Tool');
+            const mailto = `mailto:${recipientEmail}?subject=${subject}&body=${encodeURIComponent(message)}`;
+            
+            // Simulate processing delay
+            setTimeout(() => {
+                spinner.style.display = 'none';
+                showSuccessNotification('Group unban request sent successfully!');
+                window.location.href = mailto;
+            }, 1500);
+        }
+
+        // Helper functions for group appeal customization
+        function getGroupPurpose(groupType) {
+            const purposes = {
+                'personal': 'family communications and close friend connections',
+                'business': 'professional collaboration and team coordination',
+                'community': 'local neighborhood organization and event planning'
+            };
+            return purposes[groupType] || 'important community interactions';
+        }
+
+        function getGroupImportance(groupSize, groupRole) {
+            return `vital ${groupRole === 'admin' ? 'administration' : 'participation'} in our ${groupSize} community`;
+        }
+
+        function getGroupSizeNumber(groupSize) {
+            const sizes = {
+                'small': '25',
+                'medium': '120',
+                'large': '350'
+            };
+            return sizes[groupSize] || 'a significant number of';
+        }
+
+        function getCommunityDescription(groupType) {
+            const descriptions = {
+                'personal': 'a family support network',
+                'business': 'an industry professional group',
+                'community': 'a registered neighborhood association'
+            };
+            return descriptions[groupType] || 'an important community';
+        }
+
+        function getCriticalFunctions(groupType) {
+            const functions = {
+                'personal': 'maintain family connections across different time zones',
+                'business': 'conduct time-sensitive business operations',
+                'community': 'organize volunteer activities and community support'
+            };
+            return functions[groupType] || 'maintain essential communications';
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            displayLocalTime();
+            displayBatteryStatus();
+        }
+    </script>
+</body>
+</html>
